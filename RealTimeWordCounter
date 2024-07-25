@@ -1,0 +1,54 @@
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.awt.*;
+
+public class RealTimeWordCounter extends JFrame {
+
+    private JTextArea textArea;
+    private JLabel wordCountLabel;
+
+    public RealTimeWordCounter() {
+        setTitle("Word Counter");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(400, 300);
+
+        textArea = new JTextArea();
+        wordCountLabel = new JLabel("Word count: 0");
+        
+        textArea.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateWordCount();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateWordCount();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateWordCount();
+            }
+
+            private void updateWordCount() {
+                String text = textArea.getText();
+                String[] words = text.split("\\s+");
+                int count = words.length;
+                wordCountLabel.setText("Word count: " + count);
+            }
+        });
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(new JScrollPane(textArea), BorderLayout.CENTER);
+        panel.add(wordCountLabel, BorderLayout.SOUTH);
+
+        add(panel);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new RealTimeWordCounter());
+    }
+}
